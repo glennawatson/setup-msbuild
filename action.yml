@@ -8,6 +8,9 @@ inputs:
   vswhere-path:
     required: false
     description: 'Folder location of where vswhere.exe is located if a self-hosted agent'
+  prerelease:
+    required: false
+    description: 'If prerelease should be checked'
   vs-version:
     description: 'Version of Visual Studio to search; defaults to latest if not specified'
     required: false

@@ -8,11 +8,17 @@ import {ExecOptions} from '@actions/exec/lib/interfaces'
 const IS_WINDOWS = process.platform === 'win32'
 const VS_VERSION = core.getInput('vs-version') || 'latest'
 const VSWHERE_PATH = core.getInput('vswhere-path')
+const PRERELEASE = core.getInput('prerelease').toLowerCase() === 'true'
 
 // if a specific version of VS is requested
-let VSWHERE_EXEC = '-products * -requires Microsoft.Component.MSBuild -property installationPath -latest '
+let VSWHERE_EXEC =
+  '-products * -requires Microsoft.Component.MSBuild -property installationPath -latest '
 if (VS_VERSION !== 'latest') {
   VSWHERE_EXEC += `-version "${VS_VERSION}" `
+}
+
+if (PRERELEASE === true) {
+  VSWHERE_EXEC += `-prerelease `
 }
 
 core.debug(`Execution arguments: ${VSWHERE_EXEC}`)
@@ -60,6 +66,7 @@ async function run(): Promise<void> {
 
     let foundToolPath = ''
     const options: ExecOptions = {}
+
     options.listeners = {
       stdout: (data: Buffer) => {
         const installationPath = data.toString().trim()
